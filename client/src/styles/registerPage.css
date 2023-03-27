@@ -1,0 +1,46 @@
+.register-container {
+  width: 45%;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+}
+
+.register-header {
+  margin: 0 0 5px 0;
+  padding: 20px;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+}
+
+.register-title {
+  margin: 0;
+  font-size: 30px;
+  color: #546e7a;
+}
+
+.login-link {
+  color: #039be5;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.warning-container {
+  margin-top: 20px;
+}
+
+.warning-message {
+  padding: 10px;
+  border-radius: 5px;
+  color: #d50000;
+  background-color: #ff8a80;
+}

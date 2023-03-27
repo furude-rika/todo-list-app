@@ -1,0 +1,20 @@
+@import '~materialize-css/dist/css/materialize.min.css';
+
+html {
+  background-image: linear-gradient(to bottom right, #81d4fa, #ffee58);
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+nav {
+  background-color: rgba(255, 255, 255, 0.3);
+}

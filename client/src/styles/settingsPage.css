@@ -1,0 +1,52 @@
+.settings-container {
+  width: 45%;
+}
+
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+}
+
+.settings-title {
+  margin: 0 auto;
+  font-size: 30px;
+  color: #546e7a;
+}
+
+.settings-link {
+  color: #039be5;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.warning-container {
+  margin-top: 20px;
+}
+
+.warning-message {
+  padding: 10px;
+  border-radius: 5px;
+  color: #d50000;
+  background-color: #ff8a80;
+}
+
+.settings-delete {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  margin-top: 5px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+}
+
+.delete-title {
+  color: #d50000;
+}
