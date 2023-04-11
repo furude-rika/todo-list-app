@@ -1,17 +1,17 @@
-const User = require('../models/User')
-const Task = require('../models/Task')
+import User from '../models/User.js'
+import Task from '../models/Task.js'
 
-async function changePassword(user, hashedPassword) {
+const changePasswordService = async (user, hashedPassword) => {
   user.password = hashedPassword
   await user.save()
 }
 
-async function deleteUser(userId) {
+const deleteUserService = async (userId) => {
   await User.findOneAndRemove({ _id: userId })
   await Task.deleteMany({ user: userId })
 }
 
-module.exports = {
-  changePassword,
-  deleteUser
+export {
+  changePasswordService,
+  deleteUserService
 }

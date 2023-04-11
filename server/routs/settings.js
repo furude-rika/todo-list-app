@@ -1,9 +1,10 @@
-const { Router } = require('express')
-const router = Router()
-const authMiddleware = require('../middleware/auth.middleware')
-const UserController = require('../controllers/settings')
+import { Router } from 'express'
+import { changePassword, deleteUser } from '../controllers/settings.js'
+import { authMiddleware } from '../middleware/auth.middleware.js'
 
-router.patch('/change', authMiddleware, UserController.changePassword)
-router.delete('/delete', authMiddleware, UserController.deleteUser)
+const settingsRoute = Router()
 
-module.exports = router
+settingsRoute.patch('/change', authMiddleware, changePassword)
+settingsRoute.delete('/delete', authMiddleware, deleteUser)
+
+export default settingsRoute

@@ -1,16 +1,17 @@
-const Task = require('../models/Task')
-const User = require('../models/User')
+import config from 'config'
+import Task from '../models/Task.js'
+import User from '../models/User.js'
 
-async function getTasks(userId) {
+const getTasksService = async (userId) => {
   try {
     const tasks = await Task.find({ user: userId })
     return tasks
   } catch (err) {
-    throw new Error('Something went wrong')
+    throw new Error(config.get('serverErrorMessage'))
   }
 }
 
-async function createTask(task, userId) {
+const createTaskService = async (task, userId) => {
   const newTask = new Task({
     description: task,
     user: userId
@@ -23,14 +24,14 @@ async function createTask(task, userId) {
     user.tasks.push({ taskId: newTask._id })
     await user.save()
 
-    const allUserTasks = await getTasks(userId)
+    const allUserTasks = await getTasksService(userId)
     return allUserTasks
   } catch (err) {
-    throw new Error('Something went wrong')
+    throw new Error(config.get('serverErrorMessage'))
   }
 }
 
-async function deleteTask(taskId, userId) {
+const deleteTaskService = async (taskId, userId) => {
   try {
     await Task.findByIdAndRemove(taskId)
 
@@ -42,12 +43,12 @@ async function deleteTask(taskId, userId) {
 
     return true
   } catch (err) {
-    throw new Error('Something went wrong')
+    throw new Error(config.get('serverErrorMessage'))
   }
 }
 
-module.exports = {
-  getTasks,
-  createTask,
-  deleteTask
+export {
+  getTasksService,
+  createTaskService,
+  deleteTaskService
 }

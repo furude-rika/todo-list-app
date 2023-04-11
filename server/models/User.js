@@ -1,4 +1,5 @@
-const {Schema, model, Types} = require('mongoose')
+import validator from 'validator'
+import { Schema, model, Types } from 'mongoose'
 
 const userSchema = new Schema({
   name: {
@@ -8,11 +9,19 @@ const userSchema = new Schema({
   email: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    validate: {
+      validator: (value) => validator.isEmail(value),
+      message: 'Please provide a valid email address',
+    },
   },
   password: {
     type: String,
-    required: true
+    required: true,
+    validate: {
+      validator: (password) => password.length >= 6,
+      message: 'Password must be at least 6 characters long',
+    },
   },
   tasks: [{
     taskId: {
@@ -23,4 +32,4 @@ const userSchema = new Schema({
   }]
 })
 
-module.exports = model('User', userSchema)
+export default model('User', userSchema)

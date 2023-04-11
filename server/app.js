@@ -1,34 +1,35 @@
-const express = require('express')
-const config = require('config')
-const path = require('path')
-const mongoose = require('mongoose')
-const session = require('express-session')
-const bodyParser = require('body-parser')
-const authRouts = require('./routs/auth')
-const mainRouts = require('./routs/main')
-const settingsRouts = require('./routs/settings')
+import express from 'express'
+import config from 'config'
+import path from 'path'
+import mongoose from 'mongoose'
+import session from 'express-session'
+import bodyParser from 'body-parser'
+import authRoute from './routs/auth.js'
+import mainRoute from './routs/main.js'
+import settingsRoute from './routs/settings.js'
+import { fileURLToPath } from 'url'
+
 const app = express()
+const PORT = process.env.PORT || config.get('port')
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
-const PORT = config.get('port') || 5000
-
-app.use(bodyParser.urlencoded({extended: true}))
+app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(session({
   secret: 'some secret value',
   resave: false,
   saveUninitialized: false,
 }))
-app.use('/api/auth', authRouts)
-app.use('/api/main', mainRouts)
-app.use('/api/settings', settingsRouts)
+app.use('/api/auth', authRoute)
+app.use('/api/main', mainRoute)
+app.use('/api/settings', settingsRoute)
 
-if (process.env.NODE_ENV === 'production') {
-  app.use('/', express.static(path.join(__dirname, 'client', 'build')))
+app.use('/', express.static(path.join(__dirname, 'public')))
 
-  app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
-  })
-}
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'public', 'index.html'))
+})
 
 async function start() {
   try {

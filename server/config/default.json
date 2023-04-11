@@ -1,5 +1,14 @@
 {
   "port": 5000,
+  "solt": 10,
+  "createUserMessage": "User is created",
+  "deleteUserMessage": "'User was deleted",
+  "deleteTaskMessage": "Task was removed",
+  "changePassMessage": "Password was successfully changed",
+  "serverErrorMessage": "Something went wrong",
+  "registerUserError": "This user is already registered",
+  "wrongCredentialsError": "Wrong email or password, please try again",
+  "optionsMethod": "OPTIONS",
   "jwtSecret": "irish pug",
   "mongoUri": "mongodb+srv://Anastasiia:Irish12345678@cluster0.0lkuwrv.mongodb.net/app?retryWrites=true&w=majority"
 }

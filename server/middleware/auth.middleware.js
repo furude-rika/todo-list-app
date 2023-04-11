@@ -1,8 +1,9 @@
-const jwt = require('jsonwebtoken')
-const config = require('config')
+import config from 'config'
+import jwt from 'jsonwebtoken'
+import httpStatus from 'http-status'
 
-module.exports = (req, res, next) => {
-  if (req.method === 'OPTIONS') {
+export const authMiddleware = (req, res, next) => {
+  if (req.method === config.get('optionsMethod')) {
     return next()
   }
 
@@ -10,7 +11,7 @@ module.exports = (req, res, next) => {
     const token = req.headers.authorization.split(' ')[1]
 
     if (!token) {
-      return res.status(401).json({ message: 'Something went wrong' })
+      return res.status(httpStatus.UNAUTHORIZED).json({ message: config.get('serverErrorMessage') })
     }
 
     const decoded = jwt.verify(token, config.get('jwtSecret'))
@@ -18,6 +19,6 @@ module.exports = (req, res, next) => {
     next()
 
   } catch (err) {
-    res.status(401).json({ message: 'Something went wrong' })
+    res.status(httpStatus.UNAUTHORIZED).json({ message: config.get('serverErrorMessage') })
   }
 }

@@ -62,7 +62,7 @@ export const MainPage = ({ token, userId }) => {
           Add
         </button>
       </div>
-      {tasks.length > 0 && (
+      {tasks && tasks.length > 0 && (
         <ul className="nav">
           {tasks.map((task, index) => (
             <div className="nav__elem" key={index}>

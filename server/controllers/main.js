@@ -1,36 +1,39 @@
-const tasksService = require('../services/main')
 
-async function getTasks(req, res) {
+import config from 'config'
+import httpStatus from 'http-status'
+import { getTasksService, createTaskService, deleteTaskService } from '../services/main.js'
+
+const getTasks = async (req, res) => {
   try {
-    const tasks = await tasksService.getTasks(req.user.userId)
-    res.status(200).json({ tasks })
+    const tasks = await getTasksService(req.user.userId)
+    res.status(httpStatus.OK).json({ tasks })
   } catch (err) {
-    res.status(500).json({ message: err.message })
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: err.message })
   }
 }
 
-async function createTask(req, res) {
+const createTask = async (req, res) => {
   try {
-    const tasks = await tasksService.createTask(req.body.task, req.user.userId)
-    res.status(201).json({ tasks })
+    const tasks = await createTaskService(req.body.task, req.user.userId)
+    res.status(httpStatus.CREATED).json({ tasks })
   } catch (err) {
-    res.status(500).json({ message: err.message })
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: err.message })
   }
 }
 
-async function deleteTask(req, res) {
+const deleteTask = async (req, res) => {
   try {
-    const isDeleted = await tasksService.deleteTask(req.body.id, req.user.userId)
+    const isDeleted = await deleteTaskService(req.body.id, req.user.userId)
     if (isDeleted) {
       res.setHeader('Access-Control-Allow-Origin', '*')
-      res.status(200).json({ message: 'Task was removed' })
+      res.status(httpStatus.OK).json({ message: config.get('deleteTaskMessage') })
     }
   } catch (err) {
-    res.status(500).json({ message: err.message })
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: err.message })
   }
 }
 
-module.exports = {
+export {
   getTasks,
   createTask,
   deleteTask

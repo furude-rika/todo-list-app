@@ -1,33 +1,35 @@
-const User = require('../models/User')
-const bcryptjs = require('bcryptjs')
-const userService = require('../services/settings')
+import config from 'config'
+import bcryptjs from 'bcryptjs'
+import User from '../models/User.js'
+import httpStatus from 'http-status'
+import { changePasswordService, deleteUserService } from '../services/settings.js'
 
-async function changePassword(req, res) {
+const changePassword = async (req, res) => {
   try {
     const { password } = req.body
     const userToFind = await User.findOne({ _id: req.user.userId })
 
-    const hashedPassword = await bcryptjs.hash(password, 10)
-    await userService.changePassword(userToFind, hashedPassword)
+    const hashedPassword = await bcryptjs.hash(password, config.get('solt'))
+    await changePasswordService(userToFind, hashedPassword)
 
-    res.status(201).json({ message: 'Password was successfully changed' })
+    res.status(httpStatus.CREATED).json({ message: config.get('changePassMessage') })
   } catch (err) {
-    res.status(500).json({ message: 'Something went wrong' })
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: config.get('serverErrorMessage') })
   }
 }
 
-async function deleteUser(req, res) {
+const deleteUser = async (req, res) => {
   try {
     res.setHeader('Access-Control-Allow-Origin', '*')
-    await userService.deleteUser(req.user.userId)
+    await deleteUserService(req.user.userId)
 
-    res.status(200).json({message: 'User was deleted'})
+    res.status(httpStatus.OK).json({ message: config.get('deleteUserMessage') })
   } catch (err) {
-    res.status(500).json({ message: 'Something went wrong' })
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: config.get('serverErrorMessage') })
   }
 }
 
-module.exports = {
+export {
   changePassword,
   deleteUser
 }

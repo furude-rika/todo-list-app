@@ -1,50 +1,51 @@
-const jwt = require('jsonwebtoken')
-const bcryptjs = require('bcryptjs')
-const { validationResult } = require('express-validator')
-const config = require('config')
-const authService = require('../services/auth')
+import config from 'config'
+import jwt from 'jsonwebtoken'
+import bcryptjs from 'bcryptjs'
+import httpStatus from 'http-status'
+import { validationResult } from 'express-validator'
+import { findUserByEmail, createUser } from '../services/auth.js'
 
-exports.register = async (req, res) => {
+const register = async (req, res) => {
   try {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() })
+      return res.status(httpStatus.BAD_REQUEST).json({ errors: errors.array() })
     }
 
     const { name, email, password } = req.body
-    const userToFind = await authService.findUserByEmail(email)
+    const userToFind = await findUserByEmail(email)
 
     if (userToFind) {
-      return res.status(400).json({ message: 'This user is already registered' })
+      return res.status(httpStatus.BAD_REQUEST).json({ message: config.get('registerUserError') })
     } else {
-      const hashedPassword = await bcryptjs.hash(password, 10)
-      const user = await authService.createUser({
+      const hashedPassword = await bcryptjs.hash(password, config.get('solt'))
+      await createUser({
         name,
         email,
         password: hashedPassword,
         tasks: []
       })
 
-      return res.status(201).json({ message: 'User is created' })
+      return res.status(httpStatus.CREATED).json({ message: config.get('createUserMessage') })
     }
   } catch (err) {
-    res.status(500).json({ message: 'Something went wrong' })
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: config.get('serverErrorMessage') })
   }
 }
 
-exports.login = async (req, res) => {
+const login = async (req, res) => {
   try {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() })
+      return res.status(httpStatus.BAD_REQUEST).json({ errors: errors.array() })
     }
 
     const { email, password } = req.body
-    const userToFind = await authService.findUserByEmail(email)
+    const userToFind = await findUserByEmail(email)
     const isPassMatched = await bcryptjs.compare(password, userToFind.password)
 
     if (!userToFind || !isPassMatched) {
-      return res.status(400).json({ message: 'Wrong email or password, please try again' })
+      return res.status(httpStatus.BAD_REQUEST).json({ message: config.get('wrongCredentialsError') })
     }
 
     const token = jwt.sign(
@@ -54,6 +55,11 @@ exports.login = async (req, res) => {
 
     res.json({ token, userId: userToFind.id })
   } catch (err) {
-    res.status(500).json({ message: 'Something went wrong' })
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: config.get('serverErrorMessage') })
   }
+}
+
+export {
+  register,
+  login
 }

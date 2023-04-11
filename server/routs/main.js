@@ -1,10 +1,11 @@
-const { Router } = require('express')
-const router = Router()
-const tasksController = require('../controllers/main')
-const authMiddleware = require('../middleware/auth.middleware')
+import { Router } from 'express'
+import { authMiddleware } from '../middleware/auth.middleware.js'
+import { getTasks, createTask, deleteTask } from '../controllers/main.js'
 
-router.get('/', authMiddleware, tasksController.getTasks)
-router.post('/', authMiddleware, tasksController.createTask)
-router.delete('/delete', authMiddleware, tasksController.deleteTask)
+const mainRoute = Router()
 
-module.exports = router
+mainRoute.get('/', authMiddleware, getTasks)
+mainRoute.post('/', authMiddleware, createTask)
+mainRoute.delete('/delete', authMiddleware, deleteTask)
+
+export default mainRoute

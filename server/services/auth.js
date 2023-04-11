@@ -1,22 +1,16 @@
-const { body } = require('express-validator')
-const User = require('../models/User')
+import User from '../models/User.js'
 
-exports.findUserByEmail = async (email) => {
+const findUserByEmail = async (email) => {
   return User.findOne({ email })
 }
 
-exports.createUser = async (user) => {
+const createUser = async (user) => {
   const newUser = new User(user)
   await newUser.save()
   return newUser
 }
 
-exports.registerValidators = [
-  body('email').isEmail(),
-  body('password').isLength({ min: 6 }),
-]
-
-exports.loginValidators = [
-  body('email').isEmail(),
-  body('password').isLength({ min: 6 }),
-]
+export {
+  findUserByEmail,
+  createUser
+}
